@@ -32,7 +32,7 @@ public class PlayerMovement : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        input.actions["Attack"].performed -= _ => OnFire();
+        input!.actions["Attack"].performed -= _ => OnFire();
     }
 
     private void Update()
