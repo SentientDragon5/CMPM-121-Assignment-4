@@ -23,12 +23,14 @@ public class EnemySpawner : MonoBehaviour
     /// <returns></returns>
     public SpawnPoint FindSpawnPoint(string name) => spawnPoints.ToList().Find((SpawnPoint s) => s.StringName == name);
 
-    public int level = 0;
-    public int wave = 1; // waves starts at 1
+    public int level;
+    public int wave;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        level = 0;
+        wave = 0; // waves starts at 0
         var levels = DataLoader.Instance.levels;
         var yPos = 130;
         foreach (var level in levels)
@@ -45,7 +47,7 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void StartLevel(string levelname)
@@ -60,8 +62,8 @@ public class EnemySpawner : MonoBehaviour
     public void NextWave()
     {
         wave++;
-        
-        if (DataLoader.Instance.levels[level].waves.HasValue && 
+
+        if (DataLoader.Instance.levels[level].waves.HasValue &&
             wave > DataLoader.Instance.levels[level].waves.Value)
         {
             // Can only win in non endless mode
@@ -71,7 +73,7 @@ public class EnemySpawner : MonoBehaviour
                 return;
             }
         }
-        
+
         StartCoroutine(SpawnWave());
 
         GameManager.Instance.wave = wave;
@@ -92,6 +94,7 @@ public class EnemySpawner : MonoBehaviour
             yield return new WaitForSeconds(1);
             GameManager.Instance.countdown--;
         }
+        GameManager.Instance.onWaveStart.Invoke();
         GameManager.Instance.state = GameManager.GameState.INWAVE;
         var levels = DataLoader.Instance.levels;
         var spawns = levels[level].spawns;
@@ -99,13 +102,13 @@ public class EnemySpawner : MonoBehaviour
         for (int s = 0; s < spawns.Count; s++)
         {
             var spawn = spawns[s];
-            Dictionary<string,int> rpnArgs = new();
+            Dictionary<string, int> rpnArgs = new();
             rpnArgs.Add("wave", wave);
-            
+
             int count = spawn.EvalCount(rpnArgs);
-            
+
             Enemy enemy = DataLoader.Instance.FindEnemy(spawn.enemy);
-            
+
             rpnArgs.Add("base", enemy.hp);
             int hp = spawn.EvalHp(rpnArgs);
 
@@ -122,27 +125,38 @@ public class EnemySpawner : MonoBehaviour
             }
 
             for (int i = 0; i < count; ++i)
-            {                
-                string location = spawn.Locations[ i % spawn.Locations.Count];
+            {
+                string location = spawn.Locations[i % spawn.Locations.Count];
 
                 bool delayed = delays[i % delays.Count];
 
                 yield return SpawnEnemy(enemy, location, delayed, hp, damage);
             }
         }
-        
+
         yield return new WaitWhile(() => GameManager.Instance.enemy_count > 0);
         GameManager.Instance.state = GameManager.GameState.WAVEEND;
+        GameManager.Instance.onWaveEnd.Invoke();
     }
 
     const float spawnDelay = 0.5f;
 
-    IEnumerator SpawnEnemy(Enemy enemyInfo, string location, bool delayed, int? hpOverride=null,int? damageOverride=null, int? speedOverride=null)
+    IEnumerator SpawnEnemy(Enemy enemyInfo, string location, bool delayed, int? hpOverride=null, int? damageOverride=null, int? speedOverride=null)
     {
         SpawnPoint spawn_point = location == "random" ? spawnPoints[Random.Range(0, spawnPoints.Length)] : FindSpawnPoint(location);
         Vector2 offset = Random.insideUnitCircle * 1.8f;
                 
         Vector3 initial_position = spawn_point.transform.position + new Vector3(offset.x, offset.y, 0);
+        SpawnEnemyAtPosition(enemyInfo, initial_position, hpOverride, damageOverride, speedOverride);
+
+        if (delayed)
+            yield return new WaitForSeconds(spawnDelay);
+        else
+            yield return null;
+    }
+
+    public GameObject SpawnEnemyAtPosition(Enemy enemyInfo, Vector3 initial_position, int? hpOverride=null, int? damageOverride=null, int? speedOverride=null)
+    {
         GameObject new_enemy = Instantiate(enemy, initial_position, Quaternion.identity, enemyParent);
         new_enemy.name = "Enemy ("+ enemyInfo.name +")";
 
@@ -151,11 +165,11 @@ public class EnemySpawner : MonoBehaviour
         en.hp = new Hittable(hpOverride==null ? enemyInfo.hp : (int)hpOverride, Hittable.Team.MONSTERS, new_enemy);
         en.speed = speedOverride==null? enemyInfo.speed : (int)speedOverride;
         en.damage = damageOverride ==null? enemyInfo.damage : (int)damageOverride;
+        en.child = enemyInfo.child;
+        en.childNum = enemyInfo.childNum;
+        en.childWhen = enemyInfo.childWhen;
         GameManager.Instance.AddEnemy(new_enemy);
 
-        if (delayed)
-            yield return new WaitForSeconds(spawnDelay);
-        else
-            yield return null;
+        return new_enemy;
     }
 }

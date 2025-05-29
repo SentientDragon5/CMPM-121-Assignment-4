@@ -10,24 +10,24 @@ public class RapidModifier : ModifierSpell
     private float size_multiplier = 0.5f;
     private float mana_multiplier = 0.5f;
     private bool modifiersApplied = false;
-    
+
     public RapidModifier(Spell baseSpell, SpellCaster owner) : base(baseSpell, owner)
     {
     }
-    
+
     protected override void InitializeAttributes()
     {
         base.InitializeAttributes();
         attributes.name = "Rapid";
         attributes.description = "Rapid Fire projectiles";
     }
-    
+
     protected override void ApplyModifiers()
     {
         if (modifiersApplied) return;
-        
+
         var spellAttributes = GetBaseSpellAttributes();
-        
+
         if (spellAttributes != null)
         {
             spellAttributes.damageModifiers.Add(new ValueModifier(ModifierType.Multiplicative, damage_multiplier));
@@ -37,11 +37,11 @@ public class RapidModifier : ModifierSpell
             modifiersApplied = true;
         }
     }
-    
+
     public override void SetAttributesFromJson(JObject jObject)
     {
         base.SetAttributesFromJson(jObject);
-        
+
         if (jObject["damage_multiplier"] != null)
         {
             if (float.TryParse(jObject["damage_multiplier"].ToString(), out float multiplier))
@@ -62,7 +62,7 @@ public class RapidModifier : ModifierSpell
             if (float.TryParse(jObject["mana_multiplier"].ToString(), out float multiplier))
                 mana_multiplier = multiplier;
         }
-        
+
         ApplyModifiers();
     }
 }

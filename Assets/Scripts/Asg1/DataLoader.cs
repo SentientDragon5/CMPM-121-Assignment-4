@@ -26,7 +26,7 @@ public class DataLoader : MonoBehaviour
     public List<Enemy> enemies { get; private set; }
     public List<Level> levels { get; private set; }
 
-    public JObject spells {get; private set; }
+    public JObject spells { get; private set; }
     public List<Relic> relics; //{ get; private set; }
 
     public Enemy FindEnemy(string name) => enemies.Find((Enemy x) => x.name == name);
@@ -39,10 +39,10 @@ public class DataLoader : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        
+
         instance = this;
         DontDestroyOnLoad(gameObject);
-        
+
         LoadData();
     }
 
@@ -52,7 +52,7 @@ public class DataLoader : MonoBehaviour
         TextAsset levelsJson = Resources.Load<TextAsset>("levels");
         TextAsset spellsJson = Resources.Load<TextAsset>("spells");
         TextAsset relicJson = Resources.Load<TextAsset>("relics");
-        
+
         if (enemiesJson == null || levelsJson == null || spellsJson == null || relicJson == null)
         {
             Debug.LogError("JSON files not found in Resources folder!");
@@ -63,7 +63,7 @@ public class DataLoader : MonoBehaviour
         levels = JsonConvert.DeserializeObject<List<Level>>(levelsJson.text);
         spells = JObject.Parse(spellsJson.text);
         relics = JsonConvert.DeserializeObject<List<Relic>>(relicJson.text);
-        
+
         Debug.Log($"Loaded {enemies.Count} enemies and {levels.Count} levels");
     }
 

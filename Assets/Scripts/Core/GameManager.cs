@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 
-public class GameManager 
+public class GameManager
 {
     public enum GameState
     {
@@ -19,7 +19,9 @@ public class GameManager
 
     public int countdown;
     private static GameManager theInstance;
-    public static GameManager Instance {  get
+    public static GameManager Instance
+    {
+        get
         {
             if (theInstance == null)
                 theInstance = new GameManager();
@@ -28,7 +30,7 @@ public class GameManager
     }
 
     public GameObject player;
-    
+
     public ProjectileManager projectileManager;
     public SpellIconManager spellIconManager;
     public EnemySpriteManager enemySpriteManager;
@@ -44,6 +46,8 @@ public class GameManager
     public int totalDamageTaken;
     public int wave;
     public UnityEvent onNextWave = new();
+    public UnityEvent onWaveStart = new();
+    public UnityEvent onWaveEnd = new();
 
     public void AddEnemy(GameObject enemy)
     {
@@ -58,7 +62,7 @@ public class GameManager
     {
         if (enemies == null || enemies.Count == 0) return null;
         if (enemies.Count == 1) return enemies[0];
-        return enemies.Aggregate((a,b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
+        return enemies.Aggregate((a, b) => (a.transform.position - point).sqrMagnitude < (b.transform.position - point).sqrMagnitude ? a : b);
     }
 
     private GameManager()
@@ -71,7 +75,7 @@ public class GameManager
     {
         Debug.Log("Game Over!");
         state = GameState.GAMEOVER;
-        
+
         // Disable player controls
         if (player != null)
         {
@@ -87,7 +91,7 @@ public class GameManager
     {
         Debug.Log("Victory!");
         state = GameState.VICTORY;
-        
+
         if (player != null)
         {
             PlayerController controller = player.GetComponent<PlayerController>();
@@ -97,7 +101,7 @@ public class GameManager
             }
         }
     }
-    
+
     public void Reset()
     {
         foreach (GameObject enemy in new List<GameObject>(enemies))
@@ -105,7 +109,7 @@ public class GameManager
             GameObject.Destroy(enemy);
         }
         enemies.Clear();
-        
+
         state = GameState.PREGAME;
         totalDamageDealt = 0;
         totalDamageTaken = 0;

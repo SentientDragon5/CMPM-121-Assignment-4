@@ -16,7 +16,7 @@ public class RelicUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void PutsRelic(Relic r)
@@ -28,6 +28,6 @@ public class RelicUIManager : MonoBehaviour
         RelicUI ruic = rui.GetComponent<RelicUI>();
         ruic.SetRelic(r);
         //ruic.player = player;
-        
+
     }
 }

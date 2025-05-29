@@ -33,7 +33,7 @@ public class SpellUI : MonoBehaviour
             damage.text = spell.GetDamage().ToString();
             last_text_update = Time.time;
         }
-        
+
         float since_last = Time.time - spell.last_cast;
         float perc;
         if (since_last > spell.GetCooldown())
@@ -42,7 +42,7 @@ public class SpellUI : MonoBehaviour
         }
         else
         {
-            perc = 1-since_last / spell.GetCooldown();
+            perc = 1 - since_last / spell.GetCooldown();
         }
         cooldown.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 48 * perc);
     }

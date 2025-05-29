@@ -14,7 +14,7 @@ public class ProjectileManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     // public void CreateProjectile(int which, string trajectory, Vector3 where, Vector3 direction, float speed, Action<Hittable,Vector3> onHit)
@@ -53,6 +53,14 @@ public class ProjectileManager : MonoBehaviour
         if (name == "spiraling")
         {
             return new SpiralingProjectileMovement(speed);
+        }
+        if (name == "wavy")
+        {
+            return new WavyProjectileMovement(speed);
+        }
+        if (name == "ricochet")
+        {
+            return new RicochetProjectileMovement(speed);
         }
         return null;
     }

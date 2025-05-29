@@ -10,7 +10,7 @@ public class SpellUIContainer : MonoBehaviour
     {
         // we only have one spell (right now)
         spellUIs[0].SetActive(true);
-        for(int i = 1; i< spellUIs.Length; ++i)
+        for (int i = 1; i < spellUIs.Length; ++i)
         {
             spellUIs[i].SetActive(false);
         }
@@ -19,7 +19,7 @@ public class SpellUIContainer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 }

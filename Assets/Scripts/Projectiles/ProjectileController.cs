@@ -5,13 +5,13 @@ using System.Collections;
 public class ProjectileController : MonoBehaviour
 {
     public float lifetime;
-    public event Action<Hittable,Vector3> OnHit;
+    public event Action<Hittable, Vector3> OnHit;
     public ProjectileMovement movement;
-    
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -24,6 +24,13 @@ public class ProjectileController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("projectile")) return;
+
+        if (movement is RicochetProjectileMovement ricochet)
+        {
+            // Try to bounce, or destroy if no bounces left
+            if (ricochet.TryBounce(collision, transform)) return;
+        }
+
         if (collision.gameObject.CompareTag("unit"))
         {
             var ec = collision.gameObject.GetComponent<EnemyController>();

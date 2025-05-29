@@ -8,4 +8,7 @@ public class Enemy
     public int hp;
     public int speed;
     public int damage;
+    public string child;
+    public int childNum;
+    public string childWhen;
 }

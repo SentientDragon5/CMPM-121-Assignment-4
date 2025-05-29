@@ -12,6 +12,6 @@ public class EnemySpriteManager : IconManager
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

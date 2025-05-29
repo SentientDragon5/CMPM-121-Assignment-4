@@ -72,11 +72,13 @@ public class ConsoleDebug : MonoBehaviour
         }
         Debug.Log("All enemies have been killed.");
     }
-    private void FullHeal(){
+    private void FullHeal()
+    {
         var hittable = GameManager.Instance.player.GetComponent<PlayerController>().hp;
         hittable.hp = hittable.max_hp;
     }
-    public void Invincible(){
+    public void Invincible()
+    {
         var hittable = GameManager.Instance.player.GetComponent<PlayerController>().hp;
         hittable.SetMaxHP(100000000);
         hittable.hp = hittable.max_hp;

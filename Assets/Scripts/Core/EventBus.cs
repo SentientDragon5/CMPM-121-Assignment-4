@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using System;
 
 public class EventBus
@@ -20,33 +21,32 @@ public class EventBus
     public event Action OnMove;
     public event Action OnKill;
     public event Action OnCastSpell;
-
     public void DoDamage(Vector3 where, Damage dmg, Hittable target)
     {
         OnDamage?.Invoke(where, dmg, target);
     }
 
     // new methods to handle relics
-     public void TriggerTakeDamage()
+    public void TriggerTakeDamage()
     {
         OnTakeDamage?.Invoke();
     }
-    
+
     public void TriggerStandingStill(int seconds)
     {
         OnStandingStill?.Invoke(seconds);
     }
-    
+
     public void TriggerMove()
     {
         OnMove?.Invoke();
     }
-    
+
     public void TriggerKill()
     {
         OnKill?.Invoke();
     }
-    
+
     public void TriggerCastSpell()
     {
         OnCastSpell?.Invoke();

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Damage 
+public class Damage
 {
     public int amount;
     public enum Type

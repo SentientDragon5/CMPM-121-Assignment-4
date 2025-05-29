@@ -25,7 +25,7 @@ public class SpriteViewer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void ChangeMode(string m)
@@ -42,7 +42,7 @@ public class SpriteViewer : MonoBehaviour
                 var new_sv = Instantiate(spriteView, transform);
                 int x = i % per_row;
                 int y = i / per_row;
-                
+
                 new_sv.transform.Translate(x * 80, -y * 100, 0, Space.Self);
                 new_sv.GetComponent<SpriteView>().Apply(i.ToString(), GameManager.Instance.spellIconManager.Get(i));
                 views.Add(new_sv);
@@ -86,5 +86,5 @@ public class SpriteViewer : MonoBehaviour
         }
     }
 
-    
+
 }

@@ -44,7 +44,7 @@ public class ValueModifier
         }
         return result;
     }
-    
+
     public static int ApplyModifiers(int baseValue, List<ValueModifier> modifiers)
     {
         float result = ApplyModifiers((float)baseValue, modifiers);

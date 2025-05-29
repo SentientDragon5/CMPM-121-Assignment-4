@@ -8,24 +8,24 @@ public class GameUIManager : MonoBehaviour
     public GameObject rewardUI;
     public GameObject gameOverUI;
     public GameObject victoryUI;
-    
+
     public TextMeshProUGUI rewardStatsText;
     public TextMeshProUGUI gameOverStatsText;
     public TextMeshProUGUI victoryStatsText;
-    
+
     private EnemySpawner spawner;
     private GameManager.GameState lastState;
-    
+
     void Start()
     {
         spawner = FindFirstObjectByType<EnemySpawner>();
         lastState = GameManager.Instance.state;
-        
+
         rewardUI.SetActive(false);
         gameOverUI.SetActive(false);
         victoryUI.SetActive(false);
     }
-    
+
     void Update()
     {
         CheckDebugShortcuts();
@@ -35,10 +35,10 @@ public class GameUIManager : MonoBehaviour
             rewardUI.SetActive(false);
             gameOverUI.SetActive(false);
             victoryUI.SetActive(false);
-            
+
             lastState = GameManager.Instance.state;
         }
-        
+
         switch (GameManager.Instance.state)
         {
             case GameManager.GameState.WAVEEND:
@@ -52,7 +52,7 @@ public class GameUIManager : MonoBehaviour
                 break;
         }
     }
-    
+
     public SpellUI reward;
     public Button acceptReward;
     public TextMeshProUGUI rewardText;
@@ -68,16 +68,16 @@ public class GameUIManager : MonoBehaviour
             rewardUI.SetActive(true);
             float waveDuration = Time.time - GameManager.Instance.waveStartTime;
             bool thirdWave = ((spawner.wave + 1) % 3 == 0);
-            
+
             var pc = GameManager.Instance.player.GetComponent<PlayerController>();
             pc.RollReward();
             reward.SetSpell(pc.Reward);
             acceptReward.interactable = pc.CanCarryMoreSpells;
             acceptReward.gameObject.SetActive(true);
             rewardText.text = pc.Reward.GetName() + "\n" + pc.Reward.GetDescription();
-            reward.transform.localPosition =       new Vector3( 0 + (thirdWave? 265 : 0),  -35, 0);
-            acceptReward.transform.localPosition = new Vector3( 0 + (thirdWave? 265 : 0),  -90, 0);
-            rewardText.transform.localPosition =   new Vector3(11 + (thirdWave? 265 : 0), -144, 0);
+            reward.transform.localPosition = new Vector3(0 + (thirdWave ? 265 : 0), -35, 0);
+            acceptReward.transform.localPosition = new Vector3(0 + (thirdWave ? 265 : 0), -90, 0);
+            rewardText.transform.localPosition = new Vector3(11 + (thirdWave ? 265 : 0), -144, 0);
 
             pc.onDropSpell.AddListener(() => acceptReward.interactable = true);
 
@@ -95,7 +95,8 @@ public class GameUIManager : MonoBehaviour
                 if (acceptRelics[i] == null || relicIcons[i] == null || relicTexts[i] == null)
                     return;
             pc.RollRelic();
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 3; i++)
+            {
                 bool haveEnoughRelics = pc.Relic.Count > i;
                 acceptRelics[i].gameObject.SetActive(thirdWave);
                 relicTexts[i].gameObject.SetActive(thirdWave);
@@ -103,10 +104,12 @@ public class GameUIManager : MonoBehaviour
                 acceptRelics[i].interactable = haveEnoughRelics;
                 var specificButton = acceptRelics[i]; //i miss pointers
                 pc.onTakeRelic.AddListener(() => specificButton.interactable = false);
-                if (haveEnoughRelics){
+                if (haveEnoughRelics)
+                {
                     relicTexts[i].text = pc.Relic[i].name + "\n" + pc.Relic[i].trigger.description + " " + pc.Relic[i].effect.description;
                     relicIcons[i].SetRelic(pc.Relic[i]);
-                }else
+                }
+                else
                     relicTexts[i].text = "Nothing?\nWhen you're out (or almost out) of possible relic rewards this appears...";
             }
         }
@@ -117,7 +120,7 @@ public class GameUIManager : MonoBehaviour
         if (!gameOverUI.activeSelf)
         {
             gameOverUI.SetActive(true);
-            
+
             if (gameOverStatsText != null)
             {
                 gameOverStatsText.text = "Game Over!\nYou were defeated!";
@@ -129,13 +132,13 @@ public class GameUIManager : MonoBehaviour
             }
         }
     }
-    
+
     void HandleVictory()
     {
         if (!victoryUI.activeSelf)
         {
             victoryUI.SetActive(true);
-            
+
             if (victoryStatsText != null)
             {
                 victoryStatsText.text = "Victory!\nYou completed all waves!";
@@ -147,17 +150,17 @@ public class GameUIManager : MonoBehaviour
             }
         }
     }
-    
+
     public void NextWave()
     {
         spawner.NextWave();
     }
-    
+
     public void ReturnToMenu()
     {
 
         GameManager.Instance.state = GameManager.GameState.PREGAME;
-        
+
         lastState = GameManager.GameState.PREGAME;
 
         rewardUI.SetActive(false);
@@ -173,19 +176,19 @@ public class GameUIManager : MonoBehaviour
         {
             if (unit.gameObject == GameManager.Instance.player)
                 continue;
-                
+
             Destroy(unit.gameObject);
         }
         GameManager.Instance.Reset();
     }
-    
+
     public void QuitGame()
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
+#else
+        Application.Quit();
+#endif
     }
 
     void CheckDebugShortcuts()
@@ -196,7 +199,7 @@ public class GameUIManager : MonoBehaviour
             Debug.Log("Debug: Force Game Over");
             GameManager.Instance.GameOver();
         }
-        
+
         // Press P key to win the game
         if (Input.GetKeyDown(KeyCode.P))
         {

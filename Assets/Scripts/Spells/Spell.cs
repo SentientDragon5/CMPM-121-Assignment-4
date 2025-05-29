@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-public abstract class Spell 
+public abstract class Spell
 {
     public float last_cast;
     public SpellCaster owner;
@@ -51,12 +51,12 @@ public abstract class Spell
         return attributes.icon;
     }
 
-    public virtual float GetSpeed() 
+    public virtual float GetSpeed()
     {
         return attributes.GetFinalSpeed();
     }
-    
-    public virtual string GetTrajectory() 
+
+    public virtual string GetTrajectory()
     {
         return attributes.trajectory;
     }
@@ -74,11 +74,11 @@ public abstract class Spell
         this.team = team;
         last_cast = Time.time;
         GameManager.Instance.projectileManager.CreateProjectile(
-            attributes.projectileSprite, 
-            GetTrajectory(), 
-            where, 
-            target - where, 
-            GetSpeed(), 
+            attributes.projectileSprite,
+            GetTrajectory(),
+            where,
+            target - where,
+            GetSpeed(),
             OnHit,
             lifetime,
             GetSize());
@@ -94,7 +94,7 @@ public abstract class Spell
             other.Damage(new Damage(damage, damageType));
 
             GameManager.Instance.totalDamageDealt += damage;
-            
+
             GameManager.Instance.player.GetComponent<PlayerController>().onKill.Invoke();
         }
     }
@@ -103,13 +103,13 @@ public abstract class Spell
     public virtual void SetAttributesFromJson(JObject jObject)
     {
         if (jObject == null) return;
-        
+
         attributes.name = jObject["name"]?.ToString();
         attributes.description = jObject["description"]?.ToString();
-        
+
         if (jObject["icon"] != null)
             attributes.icon = jObject["icon"].Value<int>();
-        
+
         // Parse damage
         if (jObject["damage"] != null)
         {
@@ -118,7 +118,7 @@ public abstract class Spell
             {
                 string damageExpr = damageObj["amount"]?.ToString();
                 attributes.damageType = damageObj["type"]?.ToString() ?? "arcane";
-                
+
                 if (!string.IsNullOrEmpty(damageExpr))
                 {
                     var vars = new Dictionary<string, int> { { "power", owner.spellPower }, { "wave", 1 } };
@@ -128,7 +128,7 @@ public abstract class Spell
             else
             {
                 string damageExpr = jObject["damage"].ToString();
-                
+
                 if (!string.IsNullOrEmpty(damageExpr))
                 {
                     var vars = new Dictionary<string, int> { { "power", owner.spellPower }, { "wave", 1 } };
@@ -136,7 +136,7 @@ public abstract class Spell
                 }
             }
         }
-        
+
         // Parse mana cost
         if (jObject["mana_cost"] != null)
         {
@@ -147,7 +147,7 @@ public abstract class Spell
                 attributes.manaCost = RPNEvaluator.Evaluate(manaCostExpr, vars);
             }
         }
-        
+
         // Parse cooldown
         if (jObject["cooldown"] != null)
         {
@@ -158,7 +158,7 @@ public abstract class Spell
                     attributes.cooldown = cooldownValue;
             }
         }
-        
+
         // Parse projectile
         if (jObject["projectile"] != null)
         {
@@ -166,17 +166,17 @@ public abstract class Spell
             if (projectileObj != null)
             {
                 attributes.trajectory = projectileObj["trajectory"]?.ToString() ?? "straight";
-                
+
                 if (projectileObj["speed"] != null)
                 {
                     string speedStr = projectileObj["speed"].ToString();
                     var vars = new Dictionary<string, float> { { "power", owner.spellPower }, { "wave", 1 } };
                     attributes.speed = FloatRPNEvaluator.Evaluate(speedStr, vars);
                 }
-                
+
                 if (projectileObj["sprite"] != null)
                     attributes.projectileSprite = projectileObj["sprite"].Value<int>();
-                
+
                 if (projectileObj["lifetime"] != null)
                 {
                     string lifetimeStr = projectileObj["lifetime"].ToString();
@@ -185,7 +185,7 @@ public abstract class Spell
                 }
             }
         }
-        
+
         // Secondary damage (used by some spells)
         if (jObject["secondary_damage"] != null)
         {
@@ -196,7 +196,7 @@ public abstract class Spell
                 attributes.secondaryDamage = RPNEvaluator.Evaluate(secondaryDamageExpr, vars);
             }
         }
-        
+
         // Number of projectiles (used by some spells)
         if (jObject["N"] != null)
         {
@@ -207,7 +207,7 @@ public abstract class Spell
                 attributes.numProjectiles = RPNEvaluator.Evaluate(numProjectilesExpr, vars);
             }
         }
-        
+
         // Spray angle (used by arcane spray)
         if (jObject["spray"] != null)
         {

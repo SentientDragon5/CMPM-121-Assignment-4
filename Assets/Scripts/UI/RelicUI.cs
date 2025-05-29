@@ -15,7 +15,7 @@ public class RelicUI : MonoBehaviour
     public void SetRelic(Relic relic)
     {
         this.relic = relic;
-        
+
         GameManager.Instance.relicIconManager.PlaceSprite(relic.sprite, icon);
         this.highlight.gameObject.SetActive(false);
         this.label.gameObject.SetActive(false);

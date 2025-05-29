@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
 
-public class SpellCaster 
+public class SpellCaster
 {
     public int mana;
     public int max_mana;
@@ -53,7 +53,7 @@ public class SpellCaster
     {
         this.bonusSpellPower = power;
     }
-    
+
     // same as set max hp from hittable
     public void SetMaxMana(int max_mana)
     {
@@ -61,7 +61,7 @@ public class SpellCaster
         this.max_mana = max_mana;
         this.mana = Mathf.RoundToInt(perc * max_mana);
     }
-    
+
     public bool AddSpell(Spell spell)
     {
         if (equippedSpells.Count < MAX_EQUIPPED_SPELLS)
@@ -71,20 +71,20 @@ public class SpellCaster
         }
         return false;
     }
-    
+
     public void RemoveSpell(int index)
     {
         if (index >= 0 && index < equippedSpells.Count)
         {
             equippedSpells.RemoveAt(index);
-            
+
             if (activeSpellIndex >= equippedSpells.Count)
             {
                 activeSpellIndex = Mathf.Max(0, equippedSpells.Count - 1);
             }
         }
     }
-    
+
     public void SelectSpell(int index)
     {
         if (index >= 0 && index < equippedSpells.Count)
@@ -103,6 +103,6 @@ public class SpellCaster
         onCastSpell.Invoke();
         yield break;
     }
-    
+
     public UnityEvent onCastSpell = new();
 }

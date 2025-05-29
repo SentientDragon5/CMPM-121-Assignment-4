@@ -11,6 +11,6 @@ public class ProjectileMovement
 
     public virtual void Movement(Transform transform)
     {
-        
+
     }
 }

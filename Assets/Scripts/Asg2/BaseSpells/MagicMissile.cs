@@ -7,7 +7,7 @@ public class MagicMissile : Spell
     public MagicMissile(SpellCaster owner) : base(owner)
     {
     }
-    
+
     protected override void InitializeAttributes()
     {
         attributes = new SpellAttributes();

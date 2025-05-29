@@ -12,7 +12,7 @@ public class DamageNumbers : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnDamage(Vector3 where, Damage dmg, Hittable target)

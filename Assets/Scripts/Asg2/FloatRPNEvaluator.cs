@@ -57,7 +57,7 @@ public static class FloatRPNEvaluator
         if (stack.Count != 1)
         {
             var stackStr = "";
-            foreach(var i in stack.ToList()) stackStr += i.ToString() + " ";
+            foreach (var i in stack.ToList()) stackStr += i.ToString() + " ";
 
             throw new ArgumentException($"Invalid RPN expression: {expression}. Stack contains {stackStr} elements after evaluation.");
         }
